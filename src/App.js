@@ -5,10 +5,35 @@ import {
   WhatsappShareButton,
 } from "react-share";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import ReactPlayer from "react-player";
+import "./App.css";
+function SharePopup({ url, title }) {
+  return (
+    <div>
+      <FacebookShareButton url={url}>
+        <span>Share on Facebook</span>
+      </FacebookShareButton>
+      <TwitterShareButton url={url} title={title}>
+        <span>Share on Twitter</span>
+      </TwitterShareButton>
+      <WhatsappShareButton url={url} title={title}>
+        <span>Share on WhatsApp</span>
+      </WhatsappShareButton>
+      <CopyToClipboard
+        text={url}
+        onCopy={() => alert("URL copied to clipboard")}
+      >
+        <button>Copy URL</button>
+      </CopyToClipboard>
+    </div>
+  );
+}
 
 function App() {
   const [inputValue, setInputValue] = useState("");
   const [outputMessage, setOutputMessage] = useState("");
+  const [showSharePopup, setShowSharePopup] = useState(false);
+  const [isThala, setIsThala] = useState(false);
 
   useEffect(() => {
     // On component mount, check if there is a result in the URL
@@ -19,6 +44,7 @@ function App() {
       // Decode the result and set it in the state
       const result = decodeURIComponent(encodedResult);
       setOutputMessage(result);
+      setIsThala(result === "Thala!");
     }
   }, []);
 
@@ -45,8 +71,10 @@ function App() {
 
     if (letterCount === 7 || numberSum === 7) {
       setOutputMessage("Thala!");
+      setIsThala(true);
     } else {
       setOutputMessage("You are not Thala.");
+      setIsThala(false);
     }
   };
 
@@ -55,35 +83,50 @@ function App() {
     return `${window.location.origin}?result=${encodedResult}`;
   };
 
+  const openSharePopup = () => {
+    setShowSharePopup(true);
+  };
+
+  const closeSharePopup = () => {
+    setShowSharePopup(false);
+  };
+
   return (
     <div>
       <h1>Thala Checker</h1>
-      <input
-        type="text"
-        placeholder="Enter text here"
-        value={inputValue}
-        onChange={handleInputChange}
-      />
-      <button onClick={handleSubmit}>Submit</button>
-      {outputMessage && <p>{outputMessage}</p>}
-      <div>
-        {outputMessage && (
-          <div>
-            <FacebookShareButton url={shareUrl()}>
-              <span>Share on Facebook</span>
-            </FacebookShareButton>
-            <TwitterShareButton url={shareUrl()} title={outputMessage}>
-              <span>Share on Twitter</span>
-            </TwitterShareButton>
-            <WhatsappShareButton url={shareUrl()} title={outputMessage}>
-              <span>Share on WhatsApp</span>
-            </WhatsappShareButton>
-            <CopyToClipboard
-              text={shareUrl()}
-              onCopy={() => alert("URL copied to clipboard")}
-            >
-              <button>Copy URL</button>
-            </CopyToClipboard>
+      <div className="container">
+        <input
+          type="text"
+          placeholder="Enter text here"
+          value={inputValue}
+          onChange={handleInputChange}
+        />
+        <button onClick={handleSubmit}>Submit</button>
+        {outputMessage && <p className="result">{outputMessage}</p>}
+        <div>
+          {outputMessage && (
+            <div>
+              <button onClick={openSharePopup}>Share</button>
+            </div>
+          )}
+        </div>
+
+        {showSharePopup && (
+          <div className="share-popup">
+            <SharePopup url={shareUrl()} title={outputMessage} />
+            <button onClick={closeSharePopup}>Close</button>
+          </div>
+        )}
+
+        {isThala && (
+          <div className="video-container">
+            <ReactPlayer
+              url="https://www.youtube.com/watch?v=O9en3WlUcGg"
+              playing
+              loop
+              width="100%"
+              height="100%"
+            />
           </div>
         )}
       </div>
