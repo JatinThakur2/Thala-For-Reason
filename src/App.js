@@ -72,7 +72,7 @@ function App() {
     const { letterCount, numberSum } = calculateSum(inputValue);
 
     if (letterCount === 7 || numberSum === 7) {
-      setOutputMessage("Thala!");
+      setOutputMessage("Congratulation you are Thala for reason!");
       setIsThala(true);
       setShowParty(true);
 
@@ -141,10 +141,7 @@ function App() {
 
       {showParty && (
         <div className="party-bombs">
-          <img
-            src={`${process.env.PUBLIC_URL}/assets/party_bomb.gif`}
-            alt="Party Bombs"
-          />
+          <p>"Congratulation you are Thala for reason!"</p>
         </div>
       )}
     </div>
