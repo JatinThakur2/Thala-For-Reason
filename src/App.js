@@ -102,6 +102,7 @@ function App() {
   return (
     <div>
       <h1>Thala Checker</h1>
+    <h3>Check name or the year</h3>
       <div className="container">
         <input
           type="text"
