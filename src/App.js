@@ -7,6 +7,7 @@ import {
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import ReactPlayer from "react-player";
 import "./App.css";
+
 function SharePopup({ url, title }) {
   return (
     <div>
@@ -34,6 +35,7 @@ function App() {
   const [outputMessage, setOutputMessage] = useState("");
   const [showSharePopup, setShowSharePopup] = useState(false);
   const [isThala, setIsThala] = useState(false);
+  const [showParty, setShowParty] = useState(false);
 
   useEffect(() => {
     // On component mount, check if there is a result in the URL
@@ -72,6 +74,12 @@ function App() {
     if (letterCount === 7 || numberSum === 7) {
       setOutputMessage("Thala!");
       setIsThala(true);
+      setShowParty(true);
+
+      // Hide party after 3 seconds
+      setTimeout(() => {
+        setShowParty(false);
+      }, 3000);
     } else {
       setOutputMessage("You are not Thala.");
       setIsThala(false);
@@ -121,7 +129,7 @@ function App() {
         {isThala && (
           <div className="video-container">
             <ReactPlayer
-              url="https://www.youtube.com/watch?v=O9en3WlUcGg"
+              url={`https://www.youtube.com/watch?v=O9en3WlUcGg`}
               playing
               loop
               width="100%"
@@ -130,6 +138,15 @@ function App() {
           </div>
         )}
       </div>
+
+      {showParty && (
+        <div className="party-bombs">
+          <img
+            src={`${process.env.PUBLIC_URL}/assets/party_bomb.gif`}
+            alt="Party Bombs"
+          />
+        </div>
+      )}
     </div>
   );
 }
